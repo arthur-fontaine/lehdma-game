@@ -49,12 +49,12 @@ def student(game: Game):
     sprite.add_costume('run1', 'assets/sprites/student/costumes/run1.png')
     sprite.add_costume('run2', 'assets/sprites/student/costumes/run2.png')
     
-    def animate_sprite_run(variant: str, duration: float):
-        if variant == 'run2':
-            sprite.switch_variant('run2')
+    def animate_sprite_run(costume: str, duration: float):
+        if costume == 'run2':
+            sprite.switch_costume('run2')
             game.wait_then(duration, lambda _: animate_sprite_run('run1', duration))
         else:
-            sprite.switch_variant('run1')
+            sprite.switch_costume('run1')
             game.wait_then(duration, lambda _: animate_sprite_run('run2', duration))
             
     sprite.on('keydown_d', lambda _: animate_sprite_run('run1', 0.5))
