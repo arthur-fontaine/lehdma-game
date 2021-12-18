@@ -69,6 +69,8 @@ from game.Game import Sprite, Game
 def cat(game: Game):
     sprite = Sprite('assets/sprites/cat/costumes/default.png')
     sprite.add_costume('sleep', 'assets/sprites/cat/costumes/sleep.png')
+    
+    game.on('start', lambda _: game.play_song('assets/sounds/cat.mp3'))
 
     return sprite
 ```
@@ -210,3 +212,6 @@ game.run()
  - `wait_then(duration, function)`: Wait for duration seconds and then execute function.
  - `wait_until(condition)`: Wait until condition is true.
  - `repeat_every_seconds(duration, function)`: Repeat function every duration seconds.
+ - `play_song(song_path)`: Play a song.
+ - `stop_song()`: Stop the song.
+ - `seek_song_to(position)`: Seek the song to position in seconds.

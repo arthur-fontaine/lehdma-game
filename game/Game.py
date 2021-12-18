@@ -11,6 +11,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.app import App
 from kivy.uix.widget import Widget
+from kivy.core.audio import SoundLoader
 
 
 class Element(Widget):
@@ -450,6 +451,7 @@ class Game(App, Element):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        self.sound = None
         self.scenes = []
         self.scene = None
 
@@ -495,6 +497,40 @@ class Game(App, Element):
         ```
         """
         self.scene = scene
+
+    def play_song(self, song_path: str):
+        """
+        :param song_path: The path to the song to play
+
+        @example
+        ```python
+        game.play_song('song.mp3') # Plays the song at song.mp3
+        ```
+        """
+        self.sound = SoundLoader.load(song_path)
+        self.sound.play()
+
+    def stop_song(self):
+        """
+        Stops the current song
+
+        @example
+        ```python
+        game.stop_song() # Stops the current song
+        ```
+        """
+        self.sound.stop()
+
+    def seek_song_to(self, seconds: float):
+        """
+        :param seconds: The amount of seconds to seek to
+
+        @example
+        ```python
+        game.seek_song(5) # Seeks to the given amount of seconds
+        ```
+        """
+        self.sound.seek(seconds)
 
     @staticmethod
     def wait_for_seconds(seconds: float):
