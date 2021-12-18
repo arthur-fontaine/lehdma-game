@@ -182,12 +182,14 @@ sprite.add_costume('run', 'assets/sprite/run.png')
 scene = Scene()
 scene.set_background_image("assets/background.jpeg")
 scene.add_sprite(sprite)
+scene.display_text('Hello [ref=world]World[/ref]', on_world_click=lambda _: print('"World" clicked'))
 ```
 
 #### Methods
 
  - `set_background_image(background_image_path)`: Set the background image of the scene.
  - `add_sprite(sprite)`: Add a sprite to the scene.
+ - `display_text(text, **events)`: Add or change 
 
 ### Game (inherits from [kivy.uix.widget.Widget](https://kivy.org/docs/api-kivy.uix.widget.html#kivy.uix.widget.Widget) and [kivy.app.App](https://kivy.org/docs/api-kivy.app.html#kivy.app.App))
 

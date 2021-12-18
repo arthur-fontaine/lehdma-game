@@ -5,6 +5,8 @@ from typing import Optional, Callable
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.core.window import Window
+from kivy.graphics.context_instructions import Color
+from kivy.graphics.vertex_instructions import RoundedRectangle, Line
 from kivy.modules import inspector
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
@@ -12,6 +14,15 @@ from kivy.uix.image import Image
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.core.audio import SoundLoader
+from kivy.uix.label import Label
+# from kivy.core.text import FontContextManager as FCM
+#
+# FCM.create('system://myapp')
+# fonts = {
+#     'PressStart2P-Regular': FCM.add_font('assets/fonts/PressStart2P-Regular.ttf')
+# }
+
+import re
 
 
 class Element(Widget):
@@ -405,17 +416,30 @@ class Sprite(FloatLayout, Element):
 class Scene(FloatLayout, Element):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.text = None
+
+        def hide_text(_):
+            if self.text is not None:
+                self.text = None
+                self.build()
+
+        self.on('keydown_spacebar', hide_text)
+
         self.sprites = []
         self.background = None
 
     def build(self):
         self.clear_widgets()
-        self.add_widget(self.background)
+        if self.background is not None:
+            self.add_widget(self.background)
         self.size = self.background.size
 
         for sprite in self.sprites:
             sprite.build()
             self.add_widget(sprite)
+
+        if self.text is not None:
+            self.add_widget(self.text)
 
     def __set_background(self, background):
         """
@@ -445,6 +469,62 @@ class Scene(FloatLayout, Element):
         ```
         """
         self.sprites.append(sprite)
+
+    def display_text(self, text: str, **events: Callable):
+        """
+        :param text: The text to display
+        :param events: The events to listen when a ref is clicked
+
+        @example
+        ```python
+        scene.display_text('Hello World') # Displays the text 'Hello World'
+        ```
+
+        @example
+        ```python
+        scene.display_text('Hello [ref=world]World[/ref]', on_world_click=lambda: print('Hello World'))
+        # Displays the text 'Hello World' and sets the "world" reference to call the
+        # function print('Hello World') when clicked
+        """
+
+        regex = r"(\[ref=.+?\].+?\[\/ref\])"
+        subst = "[u]\\1[/u]"
+        text = re.sub(regex, subst, text, 0, re.MULTILINE)
+
+        def event_handler(instance, value):
+            if f'on_{value}_click' in events:
+                events[f'on_{value}_click'](instance)
+
+        size_hint = (.9, .2)
+        pos_hint = {'center_x': .5, 'y': .05}
+
+        layout = FloatLayout(size_hint=size_hint, pos_hint=pos_hint)
+        background_color = Widget(pos_hint={'center_x': .5, 'center_y': .5})
+        with background_color.canvas.before:
+            Color(1, 1, 1, 1)
+            RoundedRectangle(size=(Window.size[0] * size_hint[0], Window.size[1] * size_hint[1]),
+                             pos=((1 - size_hint[0]) * Window.size[0] * pos_hint['center_x'],
+                                  (1 - size_hint[1]) * Window.size[1] * pos_hint['y']))
+            Color(0, 0, 0, 1)
+            Line(rounded_rectangle=(
+                (1 - size_hint[0]) * Window.size[0] * pos_hint['center_x'] + 5,
+                (1 - size_hint[1]) * Window.size[1] * pos_hint['y'] + 5,
+                Window.size[0] * size_hint[0] - 10,
+                Window.size[1] * size_hint[1] - 10,
+                10),
+                width=1.2)
+        layout.add_widget(background_color)
+
+        label = Label(text=f'[color=000000]{text}[/color]', markup=True, size_hint=(1, 1),
+                      pos_hint={'x': 0, 'y': 0},
+                      # font_context='system://myapp',
+                      # familly=fonts['PressStart2P-Regular'],
+                      )
+        label.bind(on_ref_press=event_handler)
+
+        layout.add_widget(label)
+
+        self.text = layout
 
 
 class Game(App, Element):
