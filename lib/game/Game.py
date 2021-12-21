@@ -440,7 +440,7 @@ class Scene(FloatLayout, Element):
         self.clear_widgets()
         if self.background is not None:
             self.add_widget(self.background)
-        self.size = self.background.size
+            self.size = self.background.size
 
         for sprite in self.sprites:
             sprite.build()
