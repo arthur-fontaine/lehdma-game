@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, Callable
+from typing import Optional, Callable, Union
 
 from kivy.animation import Animation
 from kivy.clock import Clock
@@ -26,34 +26,42 @@ import re
 
 
 class Element(Widget):
-    events: dict[str, Optional[list[Callable]]] = {}
+    events: dict[str, Optional[list[dict[str, Union[Callable, float]]]]] = {}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
-        self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down, on_key_up=self._on_keyboard_up)
 
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
         self._keyboard = None
 
     def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-        # for event_name, events in self.events.items():
-        # if event_name == 'keydown_' + keycode[1]:
-        # for event in events:
-        #     event(self)
         self.emit('keydown_' + keycode[1])
 
-    def on(self, event_name: str, callback: Callable[[Sprite], None]):
+    def _on_keyboard_up(self, keyboard, keycode):
+        self.emit('keyup_' + keycode[1])
+
+    def on(self, event_name: str, callback: Callable[[Sprite], None], min_wait: float = 0):
         if event_name in self.events:
-            self.events[event_name].append(callback)
+            self.events[event_name].append({'callback': callback, 'min_wait': min_wait})
         else:
-            self.events[event_name] = [callback]
+            self.events[event_name] = [{'callback': callback, 'min_wait': min_wait}]
 
     def emit(self, event_name: str, *args):
         if event_name in self.events:
             for event in self.events[event_name]:
-                event(self, *args)
+                if event['min_wait'] != 0:
+                    if 'last_emit' not in event:
+                        event['last_emit'] = 0
+                        event['callback'](self, *args)
+                    else:
+                        if event['last_emit'] + event['min_wait'] < Clock.get_time():
+                            event['callback'](self, *args)
+                            event['last_emit'] = Clock.get_time()
+                else:
+                    event['callback'](self, *args)
 
 
 class Sprite(FloatLayout, Element):
