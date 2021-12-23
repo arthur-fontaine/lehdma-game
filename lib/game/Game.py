@@ -158,7 +158,8 @@ class Sprite(FloatLayout, Element):
         """
         try:
             pixel_hint = 100 / self.parent.size[0] / 100
-            self.pos_hint = {'center_x': x * pixel_hint, 'center_y': self.pos_hint['center_y']}
+            self.pos_hint = {'center_x': x * pixel_hint,
+                             'center_y': self.pos_hint['center_y'] if 'center_y' in self.pos_hint else 0.5}
         except ZeroDivisionError:
             pass
 
@@ -173,7 +174,8 @@ class Sprite(FloatLayout, Element):
         """
         try:
             pixel_hint = 100 / self.parent.size[1] / 100
-            self.pos_hint = {'center_x': self.pos_hint['center_x'], 'center_y': y * pixel_hint}
+            self.pos_hint = {'center_x': self.pos_hint['center_x'] if 'center_x' in self.pos_hint else 0.5,
+                             'center_y': y * pixel_hint}
         except ZeroDivisionError:
             pass
 
