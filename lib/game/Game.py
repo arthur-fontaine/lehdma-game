@@ -544,6 +544,7 @@ class Game(App, Element):
         self.sound = None
         self.scenes = []
         self.scene = None
+        self.__timer = 0
 
     def build(self) -> Widget:
         if self.scene is not None:
@@ -622,30 +623,48 @@ class Game(App, Element):
         """
         self.sound.seek(seconds)
 
-    @staticmethod
-    def wait_for_seconds(seconds: float):
+    def wait_for_seconds(self, seconds: float, use_timer=True, reset_timer=False):
         """
         :param seconds: The amount of time to wait
+        :param use_timer: Whether to use the timer or not
+        :param reset_timer: Whether to reset the timer to 0 after the wait
 
         @example
         ```python
         game.wait(1) # Waits for 1 second
         ```
         """
-        Clock.usleep(seconds * 1000000)
+        if reset_timer:
+            self.__timer = 0
 
-    @staticmethod
-    def wait_then(seconds: float, function: Callable):
+        if not use_timer:
+            Clock.usleep(seconds * 1000000)
+        else:
+            Clock.usleep(seconds * 1000000 + self.__timer)
+
+        self.__timer += seconds
+
+    def wait_then(self, seconds: float, function: Callable, use_timer=True, reset_timer=False):
         """
         :param seconds: The amount of time to wait
         :param function: The function to run after the wait
+        :param use_timer: Whether to use the timer or not
+        :param reset_timer: Whether to reset the timer to 0 after the wait
 
         @example
         ```python
         game.wait_then(1, lambda: print('Hello')) # Waits for 1 second, then prints 'Hello'
         ```
         """
-        Clock.schedule_once(function, seconds)
+        if reset_timer:
+            self.__timer = 0
+
+        if not use_timer:
+            Clock.schedule_once(function, seconds)
+        else:
+            Clock.schedule_once(function, seconds + self.__timer)
+
+        self.__timer += seconds
 
     @staticmethod
     def wait_until(condition: bool):
