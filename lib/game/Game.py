@@ -637,6 +637,14 @@ class Scene(FloatLayout, Element):
         layout.add_widget(label)
 
         self.text = layout
+        self.build()
+
+    def clear_text(self):
+        """
+        Removes the text from the scene
+        """
+        self.text = None
+        self.build()
 
 
 class Game(App, Element):
