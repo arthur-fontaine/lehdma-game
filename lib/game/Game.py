@@ -239,6 +239,30 @@ class Sprite(FloatLayout, Element):
         self.set_x_to(x)
         self.set_y_to(y)
 
+    def change_x_by_in_seconds(self, x: float, seconds: float):
+        """
+        :param x: The x position to change the sprite by
+        :param seconds: The amount of time to take to change the x position
+
+        @example
+        ```python
+        sprite.change_x_by_in_seconds(100, 1) # Changes the x position by 100 in 1 second
+        ```
+        """
+        self.go_to_in_seconds(self.center_x + x, self.center_y, seconds)
+
+    def change_y_by_in_seconds(self, y: float, seconds: float):
+        """
+        :param y: The y position to change the sprite by
+        :param seconds: The amount of time to take to change the y position
+
+        @example
+        ```python
+        sprite.change_y_by_in_seconds(100, 1) # Changes the y position by 100 in 1 second
+        ```
+        """
+        self.go_to_in_seconds(self.center_x, self.center_y + y, seconds)
+
     def change_position_by(self, x: float, y: float):
         """
         :param x: The x position to change the sprite by
@@ -251,6 +275,20 @@ class Sprite(FloatLayout, Element):
         """
         self.change_x_by(x)
         self.change_y_by(y)
+
+    def change_position_by_in_seconds(self, x: float, y: float, seconds: float):
+        """
+        :param x: The x position to change the sprite by
+        :param y: The y position to change the sprite by
+        :param seconds: The amount of time to take to change the x and y positions
+
+        @example
+        ```python
+        sprite.change_position_by_in_seconds(100, 200, 1) # Changes the x and y positions by 100 in 1 second
+        ```
+        """
+        self.change_x_by_in_seconds(x, seconds)
+        self.change_y_by_in_seconds(y, seconds)
 
     def go_to_in_seconds(self, x: float, y: float, seconds: float):
         """
