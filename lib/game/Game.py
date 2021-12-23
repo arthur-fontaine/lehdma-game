@@ -64,10 +64,34 @@ class Element(Widget):
                     event['callback'](self, *args)
 
 
+class SpriteAnimation:
+    def __init__(self, frames: list[str], loop: bool = True, duration: float = 1):
+        self.frames = frames
+        self.loop = loop
+        self.duration = duration
+        self.running = False
+        self.current_frame_index = 0
+
+    @property
+    def current_frame(self):
+        return self.frames[self.current_frame_index]
+
+    def next_frame(self):
+        self.current_frame_index += 1
+        if self.current_frame_index >= len(self.frames):
+            if self.loop:
+                self.current_frame_index = 0
+            else:
+                self.current_frame_index = len(self.frames) - 1
+                self.running = False
+        return self.current_frame
+
+
 class Sprite(FloatLayout, Element):
     def __init__(self, sprite_image_path: str, **kwargs):
         super().__init__(**kwargs)
 
+        self.current_animation_func = None
         default_costume = self.__make_sprite_image(sprite_image_path)
         self.costumes = {
             "default": default_costume
@@ -75,6 +99,7 @@ class Sprite(FloatLayout, Element):
         self.costume_name = "default"
 
         self.base_size = self.size
+        self.animations: dict[str, SpriteAnimation] = {}
 
     def build(self):
         self.clear_widgets()
@@ -421,6 +446,45 @@ class Sprite(FloatLayout, Element):
         """
         anim = Animation(opacity=opacity, duration=seconds)
         anim.start(self)
+
+    def create_animation(self, animation_name: str, frames: list[str], loop: bool = True, duration: float = 1):
+        """
+        :param animation_name: The name of the animation
+        :param frames: The list of frames to use in the animation
+        :param loop: Whether the animation should loop
+        :param duration: The duration of the animation
+
+        @example
+        ```python
+        sprite.create_animation("walk", ["walk1", "walk2", "walk3"], True) # Creates an animation named "walk" with 3 frames
+        ```
+        """
+        self.animations[animation_name] = SpriteAnimation(frames, loop, duration)
+
+    def play_animation(self, animation_name: str):
+        """
+        :param animation_name: The name of the animation to play
+
+        @example
+        ```python
+        sprite.play_animation("walk") # Plays the animation named "walk"
+        ```
+        """
+        try:
+            animation = self.animations[animation_name]
+            self.current_animation_func = lambda _: self.switch_costume(animation.next_frame())
+            Clock.schedule_interval(self.current_animation_func, animation.duration / len(animation.frames))
+        except KeyError:
+            pass
+
+    def stop_animation(self):
+        """
+        Stops the current animation
+        """
+        if self.current_animation_func is not None:
+            Clock.unschedule(self.current_animation_func)
+
+        self.switch_costume('default')
 
 
 class Scene(FloatLayout, Element):
