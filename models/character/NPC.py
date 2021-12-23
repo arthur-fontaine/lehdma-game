@@ -1,4 +1,4 @@
-from models.Character import Character
+from models.character.Character import Character
 
 
 class NPC(Character):

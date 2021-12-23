@@ -3,3 +3,4 @@ class Character:
         self.name = name
         self.description = description
         self.health = health
+        self.inventory = []
