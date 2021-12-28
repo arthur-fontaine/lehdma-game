@@ -582,9 +582,10 @@ class Scene(FloatLayout, Element):
         """
         self.sprites.append(sprite)
 
-    def display_text(self, text: str, **events: Callable):
+    def display_text(self, text: str, person: Optional[str] = None, **events: Callable):
         """
         :param text: The text to display
+        :param person: The person who speaks the text
         :param events: The events to listen when a ref is clicked
 
         @example
@@ -594,7 +595,7 @@ class Scene(FloatLayout, Element):
 
         @example
         ```python
-        scene.display_text('Hello [ref=world]World[/ref]', on_world_click=lambda: print('Hello World'))
+        scene.display_text('Hello [ref=world]World[/ref]', None, on_world_click=lambda: print('Hello World'))
         # Displays the text 'Hello World' and sets the "world" reference to call the
         # function print('Hello World') when clicked
         """
@@ -627,14 +628,22 @@ class Scene(FloatLayout, Element):
                 width=1.2)
         layout.add_widget(background_color)
 
-        label = Label(text=f'[color=000000]{text}[/color]', markup=True, size_hint=(1, 1),
-                      pos_hint={'x': 0, 'y': 0},
-                      # font_context='system://myapp',
-                      # familly=fonts['PressStart2P-Regular'],
-                      )
-        label.bind(on_ref_press=event_handler)
+        label_text = Label(text=f'[color=000000]{text}[/color]', markup=True, size_hint=(1, 1),
+                           pos_hint={'x': 0, 'y': 0},
+                           # font_context='system://myapp',
+                           # familly=fonts['PressStart2P-Regular'],
+                           )
+        label_text.bind(on_ref_press=event_handler)
 
-        layout.add_widget(label)
+        label_person = Label(text=f'[color=000000]{person}[/color]', markup=True, size_hint=(0.1, 0.1),
+                             pos_hint={'x': 0.01, 'y': 0.7},
+                             # font_context='system://myapp',
+                             # familly=fonts['PressStart2P-Regular'],
+                             )
+        label_person.bind(on_ref_press=event_handler)
+
+        layout.add_widget(label_text)
+        layout.add_widget(label_person)
 
         self.text = layout
         self.build()
