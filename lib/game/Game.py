@@ -635,15 +635,17 @@ class Scene(FloatLayout, Element):
                            )
         label_text.bind(on_ref_press=event_handler)
 
-        label_person = Label(text=f'[color=000000]{person}[/color]', markup=True, size_hint=(0.1, 0.1),
-                             pos_hint={'x': 0.01, 'y': 0.7},
-                             # font_context='system://myapp',
-                             # familly=fonts['PressStart2P-Regular'],
-                             )
-        label_person.bind(on_ref_press=event_handler)
-
         layout.add_widget(label_text)
-        layout.add_widget(label_person)
+
+        if person is not None:
+            label_person = Label(text=f'[color=000000]{person}[/color]', markup=True, size_hint=(0.1, 0.1),
+                                 pos_hint={'x': 0.01, 'y': 0.7},
+                                 # font_context='system://myapp',
+                                 # familly=fonts['PressStart2P-Regular'],
+                                 )
+            label_person.bind(on_ref_press=event_handler)
+
+            layout.add_widget(label_person)
 
         self.text = layout
         self.build()

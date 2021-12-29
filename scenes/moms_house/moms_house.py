@@ -67,7 +67,6 @@ def moms_house(game: Game):
 > [ref=dont_move]Rester[/ref]"""
 
         scene.display_text(displayed_text,
-                           None,
                            on_move_click=on_move_click,
                            on_dont_move_click=on_dont_move_click)
 
