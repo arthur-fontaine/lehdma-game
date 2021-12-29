@@ -119,7 +119,6 @@ def car_shop(game: Game):
         # TODO: hit the car dealer
 
     def on_black_screen_end(_):
-        jey.inventory.add_items(MoneyEnvelope())
         if not jey.inventory.has('money_envelope'):
             choice_node_3(on_choice_node_3_yes_click, on_choice_node_3_no_click)
         else:
