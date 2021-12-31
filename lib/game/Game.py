@@ -581,6 +581,7 @@ class Scene(FloatLayout, Element):
         ```
         """
         self.sprites.append(sprite)
+        self.build()
 
     def display_text(self, text: str, person: Optional[str] = None, **events: Callable):
         """
