@@ -1,7 +1,3 @@
-from typing import Callable
-
-from kivy.clock import Clock
-
 from lib.game.Game import Sprite, Game
 from utils.load_costumes import load_costumes
 
