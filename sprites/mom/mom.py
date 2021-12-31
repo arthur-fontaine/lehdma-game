@@ -14,4 +14,4 @@ class __Mom(MainCharacter):
         self.game = game
 
 
-mom = __Mom('Mom', 'The mom of Jey.', 100)
+mom = __Mom('Maman', 'The mom of Jey.', 100)
