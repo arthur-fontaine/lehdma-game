@@ -1,9 +1,12 @@
+from typing import Optional
+
 from lib.game.Game import Sprite, Game
 from utils.load_costumes import load_costumes
 
 
-def load_sprite(game: Game, character_name: str):
-    sprite_directory = f"assets/characters/{character_name}"
+def load_sprite(game: Game, character_name: str, sprite_directory: Optional[str] = None):
+    if sprite_directory is None:
+        sprite_directory = f"assets/characters/{character_name}"
 
     sprite = Sprite(f'{sprite_directory}/{character_name}-default.png')
 
