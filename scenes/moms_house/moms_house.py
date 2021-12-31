@@ -14,6 +14,9 @@ def moms_house(game: Game):
     map_sprite = load_map(game, 'assets/map/buildings/jey-house/jey-house.png', 1)
     scene.add_sprite(map_sprite)
 
+    pillow = Sprite('assets/objects/pillow.png')
+    scene.add_sprite(pillow)
+
     jey.build_jey(game)
     scene.add_sprite(jey.sprite)
 
@@ -27,15 +30,22 @@ def moms_house(game: Game):
     chapter_sprite.set_opacity_to(0)
     scene.add_sprite(chapter_sprite)
 
+    on_choice_node_2_mom_bedroom_click_animation_go_to_the_door = True
+
     def on_black_screen_is_disappearing(_):
+        pillow.set_opacity_to(0)
+        pillow.set_scale_to(0.125)
+
         jey.sprite.set_scale_to(0.25)
         jey.sprite.set_position_to(jey.sprite.size[0] / 2, jey.sprite.size[1] / 2)
+        jey.sprite.change_x_by(233)
 
         mom.sprite.set_scale_to(0.25)
         mom.sprite.set_position_to(mom.sprite.size[0] / 2, mom.sprite.size[1] / 2)
-        mom.sprite.change_y_by(- mom.sprite.size[1] / 4)
+        mom.sprite.change_x_by(-100)
+        mom.sprite.switch_costume('right')
 
-        map_sprite.set_position_to(map_sprite.size[0] / 2 - 112, map_sprite.size[1] / 2)
+        map_sprite.set_position_to(map_sprite.size[0] / 2, map_sprite.size[1] / 2)
 
     scene.on('black_screen_is_disappearing', on_black_screen_is_disappearing)
 
@@ -58,6 +68,8 @@ def moms_house(game: Game):
         va t'clouer au lit, hein. Roh, allez, bouge-toi, là !\"""", mom.name))
         game.wait_then(dialog_duration, lambda _: scene.clear_text())
         game.wait_then(0, lambda _: choice_node_1(on_choice_node_1_move_click, on_choice_node_1_dont_move_click))
+        game.wait_then(0, lambda _: choice_node_1(on_choice_node_1_move_click, on_choice_node_1_dont_move_click),
+                       reset_timer=True)
 
     scene.on('black_screen_end', on_black_screen_end)
 
@@ -67,25 +79,34 @@ def moms_house(game: Game):
 > [ref=dont_move]Rester[/ref]"""
 
         scene.display_text(displayed_text,
+                           None,
                            on_move_click=on_move_click,
                            on_dont_move_click=on_dont_move_click)
 
     def on_choice_node_1_move_click(_):
         scene.clear_text()
+        jey_get_up()
         choice_node_2(on_choice_node_2_car_shop_click, on_choice_node_2_friends_click,
                       on_choice_node_2_mom_bedroom_click)
 
     def on_choice_node_1_dont_move_click(_):
         scene.clear_text()
-        choice_node_7(on_choice_node_7_throw_book_click, on_choice_node_7_shout_click)
+        choice_node_7(on_choice_node_7_throw_pillow_click, on_choice_node_7_shout_click)
+
+    def jey_get_up():
+        jey.sprite.change_x_by(-155)
+
+    def jey_go_to_the_door(reset_timer=True):
+        jey.sprite.set_x_to(478)
+        jey.sprite.play_animation('walkingfromtheback')
+        game.wait_then(0, lambda _: jey.sprite.change_y_by_in_seconds(100, 1.5), reset_timer=reset_timer)
+        game.wait_then(1.5, lambda _: jey.sprite.set_opacity_to(0))
+        game.wait_then(0, lambda _: jey.sprite.stop_animation())
 
     def choice_node_2(on_car_shop_click: Callable, on_friends_click: Callable, on_mom_bedroom_click: Callable):
         displayed_text = """Où voulez-vous aller?
 > [ref=car_shop]Concessionaire[/ref]
 > [ref=friends]Amis[/ref]"""
-
-        print(jey.inventory.has('money_envelope'))
-        print(jey.inventory)
 
         if not jey.inventory.has('money_envelope'):
             displayed_text += """
@@ -98,39 +119,60 @@ def moms_house(game: Game):
 
     def on_choice_node_2_car_shop_click(_):
         scene.clear_text()
-        game.change_scene(car_shop(game))
+        jey_go_to_the_door()
+        game.wait_then(0, lambda _: game.change_scene(car_shop(game)))
 
     def on_choice_node_2_friends_click(_):
         scene.clear_text()
+        game.wait_then(0, lambda _: jey_go_to_the_door())
         # TODO: friend's scene
 
     def on_choice_node_2_mom_bedroom_click(_):
         scene.clear_text()
+
+        jey_go_to_the_door()
+
         displayed_text = """Vous récupérez une enveloppe pleine d'argent !"""
-        game.wait_then(0, lambda _: scene.display_text(displayed_text), reset_timer=True)
+        jey.inventory.add_items(MoneyEnvelope())
+        game.wait_then(3, lambda _: scene.display_text(displayed_text))
+
+        game.wait_then(0, lambda _: jey.sprite.set_opacity_to(1))
+        game.wait_then(0, lambda _: jey.sprite.play_animation('walkforward'))
+        game.wait_then(0, lambda _: jey.sprite.change_y_by_in_seconds(-100, 1.5))
+        game.wait_then(1.5, lambda _: jey.sprite.stop_animation())
+
         game.wait_then(5, lambda _: choice_node_2(on_choice_node_2_car_shop_click, on_choice_node_2_friends_click,
                                                   on_choice_node_2_mom_bedroom_click))
 
-    def choice_node_7(on_throw_book_click: Callable, on_shout_click: Callable):
+    def choice_node_7(on_throw_pillow_click: Callable, on_shout_click: Callable):
+        game.wait_then(0, lambda _: scene.display_text("""\"Tu vas sortir oui ?!\""""), reset_timer=True)
+
         displayed_text = """Que faire ?
->[ref=throw_book]Lancer un livre[/ref]
+>[ref=throw_pillow]Lancer un coussin[/ref]
 >[ref=shout]Crier en retour[/ref]"""
 
-        scene.display_text(displayed_text,
-                           on_throw_book_click=on_throw_book_click,
-                           on_shout_click=on_shout_click)
+        game.wait_then(5, lambda _: scene.display_text(displayed_text,
+                                                       on_throw_pillow_click=on_throw_pillow_click,
+                                                       on_shout_click=on_shout_click))
 
-    def on_choice_node_7_throw_book_click(_):
+    def on_choice_node_7_throw_pillow_click(_):
         scene.clear_text()
+
+        pillow.set_opacity_to(1)
+        pillow.set_position_to(jey.sprite.x + jey.sprite.size[0] / 2, jey.sprite.y + jey.sprite.size[1])
+        game.wait_then(0, lambda _: pillow.go_to_in_seconds(mom.sprite.x + pillow.size[0] * 2, mom.sprite.y, 0.25),
+                       reset_timer=True)
+
         displayed_text = """Elle sursaute et se met à crier plus fort."""
-        game.wait_then(0, lambda _: scene.display_text(displayed_text), reset_timer=True)
+        game.wait_then(1, lambda _: scene.display_text(displayed_text))
         game.wait_then(5, lambda _: choice_node_8(on_choice_node_8_stay_click, on_choice_node_8_leave_click))
-        # TODO: book throw
 
     def on_choice_node_7_shout_click(_):
         scene.clear_text()
-        displayed_text = """Vous criez en retour et vous faites gifler. Vous sortez énervé."""
+
+        displayed_text = """Vous criez en retour. Vous êtes énervé et vous voulez sortir."""
         game.wait_then(0, lambda _: scene.display_text(displayed_text), reset_timer=True)
+        game.wait_then(0, lambda _: jey.sprite.set_x_to(478))
         game.wait_then(5, lambda _: choice_node_2(on_choice_node_2_car_shop_click, on_choice_node_2_friends_click,
                                                   on_choice_node_2_mom_bedroom_click))
 
@@ -145,16 +187,19 @@ def moms_house(game: Game):
 
     def on_choice_node_8_stay_click(_):
         scene.clear_text()
-        displayed_text = """Vous prenez une gifle et décidez de sortir."""
+        displayed_text = """Vous prenez une gifle. Vous êtes énervé et vous voulez sortir."""
         game.wait_then(0, lambda _: scene.display_text(displayed_text), reset_timer=True)
         game.wait_then(5, lambda _: choice_node_2(on_choice_node_2_car_shop_click, on_choice_node_2_friends_click,
                                                   on_choice_node_2_mom_bedroom_click))
 
     def on_choice_node_8_leave_click(_):
         scene.clear_text()
-        displayed_text = """Vous sortez de la maison et récupérez une enveloppe pleine d'argent."""
+        displayed_text = """Vous sortez de la maison. Au passage, vous récupérez une enveloppe pleine d'argent dans la 
+chambre de votre mère."""
         jey.inventory.add_items(MoneyEnvelope())
-        game.wait_then(0, lambda _: scene.display_text(displayed_text), reset_timer=True)
+        game.wait_then(0, lambda _: jey_get_up(), reset_timer=True)
+        game.wait_then(0, lambda _: jey_go_to_the_door())
+        game.wait_then(0, lambda _: scene.display_text(displayed_text))
         game.wait_then(5, lambda _: choice_node_2(on_choice_node_2_car_shop_click, on_choice_node_2_friends_click,
                                                   on_choice_node_2_mom_bedroom_click))
 
