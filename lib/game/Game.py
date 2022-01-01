@@ -664,35 +664,29 @@ class Game(App, Element):
         super().__init__(**kwargs)
 
         self.sound = None
-        self.scenes = []
-        self.scene = None
+        self.scenes: dict[str, Scene] = {}
+        self.current_scene_name = None
         self.__timer = 0
 
     def build(self) -> Widget:
         if self.scene is not None:
-            root = BoxLayout()
-            self.scene.build()
+            root = FloatLayout()
             root.add_widget(self.scene)
 
             inspector.create_inspector(Window, root)
+
+            self.root = root
 
             return root
         else:
             raise Exception("No scene has been set")
 
-    def add_scene(self, scene: Scene):
-        """
-        :param scene: The scene to add to the game
-
-        @example
-        ```python
-        game.add_scene(scene) # Adds the scene to the game
-        ```
-        """
-        self.scenes.append(scene)
-
-        if self.scene is None:
-            self.scene = self.scenes[0]
+    @property
+    def scene(self) -> Scene:
+        if self.current_scene_name is not None:
+            return self.scenes[self.current_scene_name]
+        else:
+            return self.scenes[list(self.scenes.keys())[0]]
 
     def on_start(self):
         # if self.events.get('start') is not None:
@@ -700,16 +694,36 @@ class Game(App, Element):
         #         event(self)
         self.emit('start')
 
-    def change_scene(self, scene: Scene):
+    def add_scene(self, scene: Scene, scene_name: str):
         """
-        :param scene: The scene to change to
+        Adds a scene to the game
 
-        @example
-        ```python
-        game.change_scene(scene) # Changes the scene to the given scene
-        ```
+        :param scene: The scene to add
+        :param scene_name: The name of the scene
         """
-        self.scene = scene
+
+        self.scenes[scene_name] = scene
+
+    def change_scene(self, scene_name: str, start_scene: bool = False):
+        """
+        Changes the current scene
+
+        :param scene_name: The name of the scene to change to
+        :param start_scene: If the scene should be started
+        """
+        self.scene.opacity = 0
+
+        self.current_scene_name = scene_name
+
+        self.scene.build()
+
+        if start_scene:
+            self.scene.emit('start')
+
+        if self.root:
+            self.root.add_widget(self.scene)
+
+        self.scene.opacity = 1
 
     def play_song(self, song_path: str):
         """

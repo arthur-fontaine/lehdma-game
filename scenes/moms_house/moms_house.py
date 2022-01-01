@@ -120,7 +120,8 @@ def moms_house(game: Game):
     def on_choice_node_2_car_shop_click(_):
         scene.clear_text()
         jey_go_to_the_door()
-        game.wait_then(0, lambda _: game.change_scene(car_shop(game)))
+        game.wait_then(0, lambda _: game.add_scene(car_shop(game), 'car_shop'))
+        game.wait_then(0, lambda _: game.change_scene('car_shop', True))
 
     def on_choice_node_2_friends_click(_):
         scene.clear_text()
@@ -215,7 +216,7 @@ chambre de votre mère."""
         black_screen.set_scale_to(5)
         chapter_sprite.set_position_to(chapter_sprite.size[0] / 2, chapter_sprite.size[1] / 2)
 
-        game.wait_then(2, show_chapter_title)
+        game.wait_then(2, show_chapter_title, reset_timer=True)
         game.wait_then(0, lambda _: scene.emit('black_screen_is_disappearing'))
         game.wait_then(5, hide_chapter_title_and_black_screen)
         game.wait_then(2, lambda _: scene.emit('black_screen_end'))
