@@ -141,7 +141,6 @@ def nightclub(game: Game):
             game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
             game.wait_then(2, lambda _: game.add_scene(party(game), 'party'))
             game.wait_then(0, lambda _: game.change_scene('party', True))
-            # game.wait_then(2, lambda _:
 
         def hide_in_the_car_shop():
             pass
