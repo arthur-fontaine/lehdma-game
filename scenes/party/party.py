@@ -1,6 +1,7 @@
 from typing import Callable
 
 from lib.game.Game import Game, Scene, Sprite
+from scenes.shed.shed import shed
 from sprites.jey.jey import jey
 from sprites.beaten_guy.beaten_guy import beaten_guy
 from sprites.bip1.bip1 import bip1
@@ -136,7 +137,9 @@ def party(game: Game):
 
         game.wait_then(0, lambda _: leave())
 
-        # TODO: change the scene
+        game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2), reset_timer=True)
+        game.wait_then(2, lambda _: game.add_scene(shed(game), 'shed'))
+        game.wait_then(0, lambda _: game.change_scene('shed', True))
 
     def on_choice_node_12_leave_click(_):
         game.wait_then(0, lambda _: scene.clear_text(), reset_timer=True)

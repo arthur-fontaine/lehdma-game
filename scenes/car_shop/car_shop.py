@@ -3,7 +3,7 @@ from typing import Callable
 from lib.game.Game import Game, Scene, Sprite
 from models.inventory.items.Car import Car
 from models.inventory.items.Knife import Knife
-from models.inventory.items.MoneyEnvelope import MoneyEnvelope
+from scenes.nightclub.nightclub import nightclub
 from sprites.car_dealer.car_dealer import car_dealer
 from sprites.jey.jey import jey
 from utils.load_map import load_map
@@ -86,7 +86,9 @@ def car_shop(game: Game):
     def on_choice_node_5_yes_click(_):
         scene.clear_text()
         jey.inventory.add_items(Car(), Knife())
-        # TODO: go to his friends' home
+        game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2), reset_timer=True)
+        game.wait_then(2, lambda _: game.add_scene(nightclub(game), 'nightclub'))
+        game.wait_then(0, lambda _: game.change_scene('nightclub', True))
 
     def on_choice_node_5_no_click(_):
         scene.clear_text()
