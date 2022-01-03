@@ -68,8 +68,6 @@ def moms_house(game: Game):
         va t'clouer au lit, hein. Roh, allez, bouge-toi, là !\"""", mom.name))
         game.wait_then(dialog_duration, lambda _: scene.clear_text())
         game.wait_then(0, lambda _: choice_node_1(on_choice_node_1_move_click, on_choice_node_1_dont_move_click))
-        game.wait_then(0, lambda _: choice_node_1(on_choice_node_1_move_click, on_choice_node_1_dont_move_click),
-                       reset_timer=True)
 
     scene.on('black_screen_end', on_black_screen_end)
 
