@@ -1,11 +1,6 @@
-from re import L
 from typing import Callable
 
 from lib.game.Game import Game, Scene, Sprite
-from models.inventory.items.Car import Car
-from models.inventory.items.Knife import Knife
-from models.inventory.items.MoneyEnvelope import MoneyEnvelope
-from sprites.car_dealer.car_dealer import car_dealer
 from sprites.jey.jey import jey
 from sprites.beaten_guy.beaten_guy import beaten_guy
 from sprites.bip1.bip1 import bip1
