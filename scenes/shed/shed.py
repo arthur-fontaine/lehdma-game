@@ -39,6 +39,10 @@ def shed(game: Game):
     chapter_sprite.set_opacity_to(0)
     scene.add_sprite(chapter_sprite)
 
+    end_sprite = Sprite('assets/chapters-title/end.png')
+    end_sprite.set_opacity_to(0)
+    scene.add_sprite(end_sprite)
+
     def on_black_screen_is_disappearing(_):
         # TODO: adjust position of sprites
         jey.sprite.set_scale_to(0.25)
@@ -139,6 +143,7 @@ def shed(game: Game):
 
         game.wait_then(dialog_duration, lambda _: scene.clear_text())
         game.wait_then(0, lambda _: black_screen.set_opacity_to(1))
+        game.wait_then(2, lambda _: end_sprite.set_opacity_to_in_seconds(1, 2))
 
     scene.on('black_screen_end', on_black_screen_end)
 
