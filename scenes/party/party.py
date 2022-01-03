@@ -33,7 +33,7 @@ def party(game: Game):
     black_screen = Sprite('assets/black-screen.png')
     scene.add_sprite(black_screen)
 
-    chapter_sprite = Sprite('assets/chapters-title/chapter-2.png')
+    chapter_sprite = Sprite('assets/chapters-title/chapter-4.png')
     chapter_sprite.set_opacity_to(0)
     scene.add_sprite(chapter_sprite)
 
