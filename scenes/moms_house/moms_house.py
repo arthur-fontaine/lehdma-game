@@ -3,6 +3,7 @@ from typing import Callable
 from lib.game.Game import Game, Scene, Sprite
 from models.inventory.items.MoneyEnvelope import MoneyEnvelope
 from scenes.car_shop.car_shop import car_shop
+from scenes.nightclub.nightclub import nightclub
 from sprites.jey.jey import jey
 from sprites.mom.mom import mom
 from utils.load_map import load_map
@@ -124,7 +125,9 @@ def moms_house(game: Game):
     def on_choice_node_2_friends_click(_):
         scene.clear_text()
         game.wait_then(0, lambda _: jey_go_to_the_door())
-        # TODO: friend's scene
+        game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
+        game.wait_then(2, lambda _: game.add_scene(nightclub(game), 'nightclub'))
+        game.wait_then(0, lambda _: game.change_scene('nightclub', True))
 
     def on_choice_node_2_mom_bedroom_click(_):
         scene.clear_text()
