@@ -1,7 +1,8 @@
-from typing import Callable
+from typing import Optional
 
 from lib.game.Game import Game, Scene, Sprite
 from models.inventory.items.Car import Car
+from scenes.party.party import party
 from sprites.bip1.bip1 import bip1
 from sprites.bip2.bip2 import bip2
 from sprites.bouncer.bouncer import bouncer
@@ -15,6 +16,18 @@ def nightclub(game: Game):
 
     map_sprite = load_map(game)
     scene.add_sprite(map_sprite)
+
+    map_rows_coordinates = [-1200, -800, -240, 0]
+    map_columns_coordinates = [-112.3674911660778, -540, -1075, -1490]
+    map_intersections = [
+        ['br', 'lr', 'bl', ''],
+        ['tbr', 'blr', 'tblr', 'bl'],
+        ['tbr', 'tblr', 'tblr', 'tbl'],
+        ['tr', 'tlr', 'tlr', 'tl'],
+    ]
+
+    sprite_rows_coordinates = [550, 325, 365, 100]
+    sprite_columns_coordinates = [75, 325, 460, 740]
 
     bouncer.build_bouncer(game)
     scene.add_sprite(bouncer.sprite)
@@ -40,6 +53,101 @@ def nightclub(game: Game):
     chapter_sprite = Sprite('assets/chapters-title/chapter-2.png')
     chapter_sprite.set_opacity_to(0)
     scene.add_sprite(chapter_sprite)
+
+    def take_flight(position: Optional[list[int]] = None):
+        if position is None:
+            position = [map_columns_coordinates[3], map_rows_coordinates[2]]
+
+        scene.clear_text()
+
+        x_intersection = map_columns_coordinates.index(position[0])
+        y_intersection = map_rows_coordinates.index(position[1])
+        map_intersection = map_intersections[y_intersection][x_intersection]
+
+        game.wait_then(0, lambda _: bip1.sprite.set_opacity_to(0), reset_timer=True)
+        game.wait_then(0, lambda _: bip2.sprite.set_opacity_to(0))
+        game.wait_then(0, lambda _: bouncer.sprite.set_opacity_to(0))
+        game.wait_then(0, lambda _: animate_sprites([jey.sprite], map_sprite.pos, position))
+        game.wait_then(0, lambda _: map_sprite.change_position_by_in_seconds(-(map_sprite.pos[0] - position[0]),
+                                                                             -(map_sprite.pos[1] - position[1]),
+                                                                             2))
+        sprite_y = sprite_rows_coordinates[y_intersection]
+        sprite_x = sprite_columns_coordinates[x_intersection]
+        game.wait_then(0, lambda _: jey.sprite.go_to_in_seconds(sprite_x, sprite_y, 2))
+        game.wait_then(2, lambda _: jey.sprite.stop_animation())
+        game.wait_then(0, lambda _: take_flight_choice())
+
+        def animate_sprites(sprites_to_animate: list[Sprite], current_position: list[int], target_position: list[int]):
+            animation_name = ''
+
+            if current_position[0] < target_position[0]:
+                animation_name = 'walkingleft'
+            elif current_position[0] > target_position[0]:
+                animation_name = 'walkingright'
+            elif current_position[1] < target_position[1]:
+                animation_name = 'walkforward'
+            elif current_position[1] > target_position[1]:
+                animation_name = 'walkingfromtheback'
+
+            if animation_name != '':
+                for sprite in sprites_to_animate:
+                    sprite.play_animation(animation_name)
+
+        def take_flight_choice():
+            if not ((x_intersection == 0 and y_intersection == 2) or (x_intersection == 1 and y_intersection == 2)):
+                displayed_text = """Dans quelle direction veux-tu aller ?"""
+
+                if "t" in map_intersection:
+                    displayed_text += "\n> [ref=top]Haut[/ref]"
+                if "b" in map_intersection:
+                    displayed_text += "\n> [ref=bottom]Bas[/ref]"
+                if "l" in map_intersection:
+                    displayed_text += "\n> [ref=left]Gauche[/ref]"
+                if "r" in map_intersection:
+                    displayed_text += "\n> [ref=right]Droite[/ref]"
+
+                scene.display_text(displayed_text,
+                                   on_top_click=lambda _: take_flight(
+                                       [position[0], map_rows_coordinates[y_intersection - 1]]),
+                                   on_bottom_click=lambda _: take_flight(
+                                       [position[0], map_rows_coordinates[y_intersection + 1]]),
+                                   on_left_click=lambda _: take_flight(
+                                       [map_columns_coordinates[x_intersection - 1], position[1]]),
+                                   on_right_click=lambda _: take_flight(
+                                       [map_columns_coordinates[x_intersection + 1], position[1]]))
+            else:
+                displayed_text = """Où voulez-vous vous cacher ?
+> [ref=store]Dans le magasin[/ref]"""
+
+                if x_intersection == 0 and y_intersection == 2:
+                    displayed_text += "\n> [ref=car_shop]Chez le concessionaire[/ref]"
+                elif x_intersection == 1 and y_intersection == 2:
+                    displayed_text += "\n> [ref=trash]Dans la poubelle[/ref]"
+
+                scene.display_text(displayed_text,
+                                   on_store_click=lambda _: hide_in_the_store(),
+                                   on_car_shop_click=lambda _: hide_in_the_car_shop(),
+                                   on_trash_click=lambda _: hide_in_the_trash())
+
+        def hide_in_the_store():
+            game.wait_then(0, lambda _: scene.clear_text(), reset_timer=True)
+            game.wait_then(0, lambda _: jey.sprite.play_animation('walkingleft'))
+            game.wait_then(0, lambda _: map_sprite.change_x_by_in_seconds(325, 2))
+            game.wait_then(2, lambda _: jey.sprite.stop_animation())
+            game.wait_then(0, lambda _: jey.sprite.play_animation('walkingfromtheback'))
+            game.wait_then(0, lambda _: jey.sprite.change_y_by_in_seconds(80, 2))
+            game.wait_then(2, lambda _: jey.sprite.stop_animation())
+            game.wait_then(0, lambda _: jey.sprite.set_opacity_to(0))
+            game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
+            game.wait_then(2, lambda _: game.add_scene(party(game), 'party'))
+            game.wait_then(0, lambda _: game.change_scene('party', True))
+            # game.wait_then(2, lambda _:
+
+        def hide_in_the_car_shop():
+            pass
+
+        def hide_in_the_trash():
+            pass
 
     def on_black_screen_is_disappearing(_):
         jey.sprite.set_scale_to(0.25)
@@ -128,15 +236,14 @@ def nightclub(game: Game):
 
         dialog_duration = 5
 
-        game.wait_then(1, lambda _: scene.display_text("Désolé messieurs mais vous ne pourrez pas rentrer."))
+        game.wait_then(1, lambda _: scene.display_text("Ça va pas être possible pour vous ce soir les mecs. Veuillez "
+                                                       "disposer.", bouncer.name))
         game.wait_then(dialog_duration,
-                       lambda _: scene.display_text("Vous avez été débarqué par la porte de la voiture."),
-                       bouncer.name)
-        game.wait_then(dialog_duration, lambda _: scene.display_text("Comment ça ?"), jey.name)
+                       lambda _: scene.display_text("T'es sérieux là ? Tu nous vires ?", jey.name))
+        game.wait_then(dialog_duration, lambda _: scene.display_text("Circulez s'il vous plait.", bouncer.name))
         game.wait_then(dialog_duration,
-                       lambda _: scene.display_text("Vous n'êtes plus autorisé ici. Donc veuillez partir."),
-                       bouncer.name)
-        game.wait_then(dialog_duration, lambda _: scene.display_text("Vous avez été débarqué par la porte de la voiture."), jey.name)
+                       lambda _: scene.clear_text())
+        game.wait_then(0, lambda _: take_flight())
 
     scene.on('black_screen_end', on_black_screen_end)
 
