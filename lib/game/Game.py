@@ -287,8 +287,7 @@ class Sprite(FloatLayout, Element):
         sprite.change_position_by_in_seconds(100, 200, 1) # Changes the x and y positions by 100 in 1 second
         ```
         """
-        self.change_x_by_in_seconds(x, seconds)
-        self.change_y_by_in_seconds(y, seconds)
+        self.go_to_in_seconds(self.center_x + x, self.center_y + y, seconds)
 
     def go_to_in_seconds(self, x: float, y: float, seconds: float):
         """
