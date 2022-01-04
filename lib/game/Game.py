@@ -508,6 +508,7 @@ class Sprite(FloatLayout, Element):
         ```
         """
         try:
+            self.stop_animation()
             animation = self.animations[animation_name]
             self.current_animation_func = lambda _: self.switch_costume(animation.next_frame())
             Clock.schedule_interval(self.current_animation_func, animation.duration / len(animation.frames))
