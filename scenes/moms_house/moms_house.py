@@ -31,8 +31,6 @@ def moms_house(game: Game):
     chapter_sprite.set_opacity_to(0)
     scene.add_sprite(chapter_sprite)
 
-    on_choice_node_2_mom_bedroom_click_animation_go_to_the_door = True
-
     def on_black_screen_is_disappearing(_):
         pillow.set_opacity_to(0)
         pillow.set_scale_to(0.125)
