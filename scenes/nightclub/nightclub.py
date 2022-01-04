@@ -14,7 +14,7 @@ from utils.load_map import load_map
 def nightclub(game: Game):
     scene = Scene()
 
-    map_sprite = load_map(game)
+    map_sprite = load_map(game, 'nightclub', 'assets/map/map.png')
     scene.add_sprite(map_sprite)
 
     map_rows_coordinates = [-1200, -800, -240, 0]

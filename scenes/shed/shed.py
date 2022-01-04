@@ -10,7 +10,7 @@ from utils.load_map import load_map
 def shed(game: Game):
     scene = Scene()
 
-    map_sprite = load_map(game, 'assets/map/buildings/shed/shed.png', 1)
+    map_sprite = load_map(game, 'shed', 'assets/map/buildings/shed/shed.png', 1)
     scene.add_sprite(map_sprite)
 
     jey.build_jey(game)

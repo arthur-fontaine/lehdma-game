@@ -12,7 +12,7 @@ from utils.load_map import load_map
 def party(game: Game):
     scene = Scene()
 
-    map_sprite = load_map(game)
+    map_sprite = load_map(game, 'party', 'assets/map/map.png')
     scene.add_sprite(map_sprite)
 
     jey.build_jey(game)

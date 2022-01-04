@@ -12,7 +12,7 @@ from utils.load_map import load_map
 def car_shop(game: Game):
     scene = Scene()
 
-    map_sprite = load_map(game)
+    map_sprite = load_map(game, 'car_shop', 'assets/map/map.png')
     scene.add_sprite(map_sprite)
 
     jey.build_jey(game)

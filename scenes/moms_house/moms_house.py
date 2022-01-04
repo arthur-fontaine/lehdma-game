@@ -12,7 +12,7 @@ from utils.load_map import load_map
 def moms_house(game: Game):
     scene = Scene()
 
-    map_sprite = load_map(game, 'assets/map/buildings/jey-house/jey-house.png', 1)
+    map_sprite = load_map(game, 'moms_house', 'assets/map/buildings/jey-house/jey-house.png', 1)
     scene.add_sprite(map_sprite)
 
     pillow = Sprite('assets/objects/pillow.png')
