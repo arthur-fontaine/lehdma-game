@@ -44,7 +44,6 @@ def shed(game: Game):
     scene.add_sprite(end_sprite)
 
     def on_black_screen_is_disappearing(_):
-        # TODO: adjust position of sprites
         jey.sprite.set_scale_to(0.25)
         jey.sprite.set_position_to(400, 300)
         jey.sprite.change_x_by(150)
@@ -69,7 +68,7 @@ def shed(game: Game):
         cop2.sprite.change_x_by(-100)
         cop2.sprite.change_y_by(200)
 
-        map_sprite.set_position_to(map_sprite.size[0] / 2 - 112, map_sprite.size[1] / 2)
+        map_sprite.set_position_to(map_sprite.size[0] / 2, map_sprite.size[1] / 2)
 
     scene.on('shed_black_screen_is_disappearing', on_black_screen_is_disappearing)
 
