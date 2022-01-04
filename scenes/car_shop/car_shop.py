@@ -3,9 +3,11 @@ from typing import Callable
 from lib.game.Game import Game, Scene, Sprite
 from models.inventory.items.Car import Car
 from models.inventory.items.Knife import Knife
+from scenes.game_over.game_over import game_over
 from scenes.nightclub.nightclub import nightclub
 from sprites.car_dealer.car_dealer import car_dealer
 from sprites.jey.jey import jey
+from sprites.police_sirens.police_sirens import show_police_sirens
 from utils.load_map import load_map
 
 
@@ -20,6 +22,14 @@ def car_shop(game: Game):
 
     car_dealer.build_car_dealer(game)
     scene.add_sprite(car_dealer.sprite)
+
+    blue_police_siren = Sprite('assets/police-siren/blue.png')
+    blue_police_siren.set_opacity_to(0)
+    scene.add_sprite(blue_police_siren)
+
+    red_police_siren = Sprite('assets/police-siren/red.png')
+    red_police_siren.set_opacity_to(0)
+    scene.add_sprite(red_police_siren)
 
     white_screen = Sprite('assets/white-screen.png')
     white_screen.set_opacity_to(0)
@@ -113,13 +123,17 @@ def car_shop(game: Game):
 
         jey.sprite.play_animation('walkingfromtheback')
         jey.sprite.change_y_by_in_seconds(100, 5)
-        game.wait_then(5, lambda _: jey.sprite.stop_animation(), reset_timer=True)
-
         car_dealer.sprite.play_animation('walkingfromtheback')
         car_dealer.sprite.change_y_by_in_seconds(jey.sprite.pos[1] - car_dealer.sprite.pos[1] + 100, 5)
-        game.wait_then(5, lambda _: car_dealer.sprite.stop_animation())
+        game.wait_then(5, lambda _: jey.sprite.stop_animation(), reset_timer=True)
+        game.wait_then(0, lambda _: car_dealer.sprite.stop_animation())
 
-        # TODO: gets picked up by the police
+        show_police_sirens(game, blue_police_siren, red_police_siren, 10, 2)
+
+        game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
+
+        game.wait_then(2, lambda _: game.add_scene(game_over(game), 'game_over'))
+        game.wait_then(0, lambda _: game.change_scene('game_over', True))
 
     def on_choice_node_6_hit_click(_):
         scene.clear_text()

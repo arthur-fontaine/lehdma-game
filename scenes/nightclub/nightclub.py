@@ -1,11 +1,13 @@
 from typing import Optional, Callable
 
 from lib.game.Game import Game, Scene, Sprite
+from scenes.game_over.game_over import game_over
 from scenes.party.party import party
 from sprites.bip1.bip1 import bip1
 from sprites.bip2.bip2 import bip2
 from sprites.bouncer.bouncer import bouncer
 from sprites.jey.jey import jey
+from sprites.police_sirens.police_sirens import show_police_sirens
 from sprites.yellow_car.yellow_car import yellow_car
 from utils.load_map import load_map
 
@@ -43,6 +45,14 @@ def nightclub(game: Game):
     if jey.inventory.has('car'):
         yellow_car.build_yellow_car(game)
         scene.add_sprite(yellow_car.sprite)
+
+    blue_police_siren = Sprite('assets/police-siren/blue.png')
+    blue_police_siren.set_opacity_to(0)
+    scene.add_sprite(blue_police_siren)
+
+    red_police_siren = Sprite('assets/police-siren/red.png')
+    red_police_siren.set_opacity_to(0)
+    scene.add_sprite(red_police_siren)
 
     black_screen = Sprite('assets/black-screen.png')
     scene.add_sprite(black_screen)
@@ -277,12 +287,22 @@ def nightclub(game: Game):
                            on_flight_click=on_flight_click)
 
     def on_choice_node_9_use_knife_click(_):
-        # TODO: use knife -> police -> game over
-        pass
+        # TODO: use knife
+        show_police_sirens(game, blue_police_siren, red_police_siren, 10, 2)
+
+        game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
+
+        game.wait_then(2, lambda _: game.add_scene(game_over(game), 'game_over'))
+        game.wait_then(0, lambda _: game.change_scene('game_over'))
 
     def on_choice_node_9_hit_click(_):
-        # TODO: hit -> police -> game over
-        pass
+        # TODO: hit
+        show_police_sirens(game, blue_police_siren, red_police_siren, 10, 2)
+
+        game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
+
+        game.wait_then(2, lambda _: game.add_scene(game_over(game), 'game_over'))
+        game.wait_then(0, lambda _: game.change_scene('game_over'))
 
     def on_choice_node_9_flight_click(_):
         take_flight()
