@@ -222,17 +222,24 @@ chambre de votre mère."""
         game.wait_then(2, lambda _: scene.emit('moms_house_black_screen_end'))
 
     def on_from_car_shop(_):
-        # FIXME: jey does not appear
+        jey.build_jey(game)
+        scene.add_sprite(jey.sprite)
 
-        jey.sprite.set_position_to(478, 300)
+        jey.sprite.set_position_to(478, 400)
+        jey.sprite.set_opacity_to(0)
+
         mom.sprite.set_position_to(300, 300)
-        jey.sprite.set_opacity_to(1)
 
         black_screen.set_position_to(black_screen.size[0] / 2, black_screen.size[1] / 2)
         black_screen.set_scale_to(5)
         black_screen.set_opacity_to(1)
 
         game.wait_then(2, lambda _: black_screen.set_opacity_to_in_seconds(0, 2), reset_timer=True)
+        game.wait_then(0, lambda _: jey.sprite.set_scale_to(0.25))
+        game.wait_then(2, lambda _: jey.sprite.set_opacity_to(1))
+        game.wait_then(0, lambda _: jey.sprite.play_animation('walkforward'))
+        game.wait_then(0, lambda _: jey.sprite.change_y_by_in_seconds(-100, 1.5))
+        game.wait_then(1.5, lambda _: jey.sprite.stop_animation())
         game.wait_then(2, lambda _: choice_node_2(on_choice_node_2_car_shop_click, on_choice_node_2_friends_click,
                                                   on_choice_node_2_mom_bedroom_click))
 
