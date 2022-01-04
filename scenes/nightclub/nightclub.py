@@ -132,9 +132,16 @@ def nightclub(game: Game):
 
         def hide_in_the_store():
             game.wait_then(0, lambda _: scene.clear_text(), reset_timer=True)
-            game.wait_then(0, lambda _: jey.sprite.play_animation('walkingleft'))
-            game.wait_then(0, lambda _: map_sprite.change_x_by_in_seconds(325, 2))
-            game.wait_then(2, lambda _: jey.sprite.stop_animation())
+
+            if x_intersection == 0:
+                game.wait_then(0, lambda _: jey.sprite.play_animation('walkingright'))
+                game.wait_then(0, lambda _: map_sprite.change_x_by_in_seconds(-325, 2))
+                game.wait_then(2, lambda _: jey.sprite.stop_animation())
+            elif x_intersection == 1:
+                game.wait_then(0, lambda _: jey.sprite.play_animation('walkingleft'))
+                game.wait_then(0, lambda _: map_sprite.change_x_by_in_seconds(325, 2))
+                game.wait_then(2, lambda _: jey.sprite.stop_animation())
+
             game.wait_then(0, lambda _: jey.sprite.play_animation('walkingfromtheback'))
             game.wait_then(0, lambda _: jey.sprite.change_y_by_in_seconds(80, 2))
             game.wait_then(2, lambda _: jey.sprite.stop_animation())
