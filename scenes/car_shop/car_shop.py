@@ -38,7 +38,7 @@ def car_shop(game: Game):
 
         map_sprite.set_position_to(map_sprite.size[0] / 2 - 112, map_sprite.size[1] / 2)
 
-    scene.on('black_screen_is_disappearing', on_black_screen_is_disappearing)
+    scene.on('car_shop_black_screen_is_disappearing', on_black_screen_is_disappearing)
 
     def choice_node_3(on_yes_click: Callable, on_no_click: Callable):
         displayed_text = """Veux-tu retourner chez ta mère ?
@@ -126,7 +126,7 @@ def car_shop(game: Game):
         else:
             choice_node_4(on_choice_4_make_a_deal_click, on_choice_4_get_angry_click)
 
-    scene.on('black_screen_end', on_black_screen_end)
+    scene.on('car_shop_black_screen_end', on_black_screen_end)
 
     def show_chapter_title(_):
         chapter_sprite.set_opacity_to_in_seconds(1, 2)
@@ -141,10 +141,10 @@ def car_shop(game: Game):
         chapter_sprite.set_position_to(chapter_sprite.size[0] / 2, chapter_sprite.size[1] / 2)
 
         game.wait_then(2, show_chapter_title, reset_timer=True)
-        game.wait_then(0, lambda _: scene.emit('black_screen_is_disappearing'))
+        game.wait_then(0, lambda _: scene.emit('car_shop_black_screen_is_disappearing'))
         game.wait_then(5, hide_chapter_title_and_black_screen)
-        game.wait_then(2, lambda _: scene.emit('black_screen_end'))
+        game.wait_then(2, lambda _: scene.emit('car_shop_black_screen_end'))
 
-    scene.on('start', on_scene_start)
+    scene.on('car_shop_start', on_scene_start)
 
     return scene

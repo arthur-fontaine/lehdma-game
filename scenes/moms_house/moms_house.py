@@ -48,7 +48,7 @@ def moms_house(game: Game):
 
         map_sprite.set_position_to(map_sprite.size[0] / 2, map_sprite.size[1] / 2)
 
-    scene.on('black_screen_is_disappearing', on_black_screen_is_disappearing)
+    scene.on('moms_house_black_screen_is_disappearing', on_black_screen_is_disappearing)
 
     def on_black_screen_end(_):
         dialog_duration = 5
@@ -70,7 +70,7 @@ def moms_house(game: Game):
         game.wait_then(dialog_duration, lambda _: scene.clear_text())
         game.wait_then(0, lambda _: choice_node_1(on_choice_node_1_move_click, on_choice_node_1_dont_move_click))
 
-    scene.on('black_screen_end', on_black_screen_end)
+    scene.on('moms_house_black_screen_end', on_black_screen_end)
 
     def choice_node_1(on_move_click: Callable, on_dont_move_click: Callable):
         displayed_text = """Que faire?
@@ -218,10 +218,26 @@ chambre de votre mère."""
         chapter_sprite.set_position_to(chapter_sprite.size[0] / 2, chapter_sprite.size[1] / 2)
 
         game.wait_then(2, show_chapter_title, reset_timer=True)
-        game.wait_then(0, lambda _: scene.emit('black_screen_is_disappearing'))
+        game.wait_then(0, lambda _: scene.emit('moms_house_black_screen_is_disappearing'))
         game.wait_then(5, hide_chapter_title_and_black_screen)
-        game.wait_then(2, lambda _: scene.emit('black_screen_end'))
+        game.wait_then(2, lambda _: scene.emit('moms_house_black_screen_end'))
 
-    scene.on('start', on_scene_start)
+    def on_from_car_shop(_):
+        # FIXME: jey does not appear
+
+        jey.sprite.set_position_to(478, 300)
+        mom.sprite.set_position_to(300, 300)
+        jey.sprite.set_opacity_to(1)
+
+        black_screen.set_position_to(black_screen.size[0] / 2, black_screen.size[1] / 2)
+        black_screen.set_scale_to(5)
+        black_screen.set_opacity_to(1)
+
+        game.wait_then(2, lambda _: black_screen.set_opacity_to_in_seconds(0, 2), reset_timer=True)
+        game.wait_then(2, lambda _: choice_node_2(on_choice_node_2_car_shop_click, on_choice_node_2_friends_click,
+                                                  on_choice_node_2_mom_bedroom_click))
+
+    scene.on('moms_house_start', on_scene_start)
+    scene.on('moms_house_from_car_shop', on_from_car_shop)
 
     return scene

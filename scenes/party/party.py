@@ -59,7 +59,7 @@ def party(game: Game):
 
         map_sprite.set_position_to(map_sprite.size[0] / 2 - 700, map_sprite.size[1] / 2 - 500)
 
-    scene.on('black_screen_is_disappearing', on_black_screen_is_disappearing)
+    scene.on('party_black_screen_is_disappearing', on_black_screen_is_disappearing)
 
     def on_black_screen_end(_):
         dialog_duration = 5
@@ -81,7 +81,7 @@ def party(game: Game):
         game.wait_then(dialog_duration,
                        lambda _: choice_node_12(on_choice_node_12_stay_click, on_choice_node_12_leave_click))
 
-    scene.on('black_screen_end', on_black_screen_end)
+    scene.on('party_black_screen_end', on_black_screen_end)
 
     def leave():
         game.wait_then(0, lambda _: jey.sprite.play_animation('walkforward'), reset_timer=True)
@@ -158,10 +158,10 @@ def party(game: Game):
         chapter_sprite.set_position_to(chapter_sprite.size[0] / 2, chapter_sprite.size[1] / 2)
 
         game.wait_then(2, show_chapter_title, reset_timer=True)
-        game.wait_then(0, lambda _: scene.emit('black_screen_is_disappearing'))
+        game.wait_then(0, lambda _: scene.emit('party_black_screen_is_disappearing'))
         game.wait_then(5, hide_chapter_title_and_black_screen)
-        game.wait_then(2, lambda _: scene.emit('black_screen_end'))
+        game.wait_then(2, lambda _: scene.emit('party_black_screen_end'))
 
-    scene.on('start', on_scene_start)
+    scene.on('party_start', on_scene_start)
 
     return scene

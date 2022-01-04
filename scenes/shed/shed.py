@@ -71,7 +71,7 @@ def shed(game: Game):
 
         map_sprite.set_position_to(map_sprite.size[0] / 2 - 112, map_sprite.size[1] / 2)
 
-    scene.on('black_screen_is_disappearing', on_black_screen_is_disappearing)
+    scene.on('shed_black_screen_is_disappearing', on_black_screen_is_disappearing)
 
     def on_black_screen_end(_):
         dialog_duration = 5
@@ -145,7 +145,7 @@ def shed(game: Game):
         game.wait_then(0, lambda _: black_screen.set_opacity_to(1))
         game.wait_then(2, lambda _: end_sprite.set_opacity_to_in_seconds(1, 2))
 
-    scene.on('black_screen_end', on_black_screen_end)
+    scene.on('shed_black_screen_end', on_black_screen_end)
 
     def show_chapter_title(_):
         chapter_sprite.set_opacity_to_in_seconds(1, 2)
@@ -160,10 +160,10 @@ def shed(game: Game):
         chapter_sprite.set_position_to(chapter_sprite.size[0] / 2, chapter_sprite.size[1] / 2)
 
         game.wait_then(2, show_chapter_title, reset_timer=True)
-        game.wait_then(0, lambda _: scene.emit('black_screen_is_disappearing'))
+        game.wait_then(0, lambda _: scene.emit('shed_black_screen_is_disappearing'))
         game.wait_then(5, hide_chapter_title_and_black_screen)
-        game.wait_then(2, lambda _: scene.emit('black_screen_end'))
+        game.wait_then(2, lambda _: scene.emit('shed_black_screen_end'))
 
-    scene.on('start', on_scene_start)
+    scene.on('shed_start', on_scene_start)
 
     return scene

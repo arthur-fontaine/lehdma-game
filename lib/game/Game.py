@@ -719,7 +719,12 @@ class Game(App, Element):
         if start_scene:
             self.scene.emit('start')
 
-        if self.root:
+        if start_scene is True:
+            self.scene.emit(scene_name + '_start')
+        elif type(start_scene) is str:
+            self.scene.emit(start_scene)
+
+        if self.root and self.scene.parent is None:
             self.root.add_widget(self.scene)
 
         self.scene.opacity = 1
