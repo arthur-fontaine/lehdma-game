@@ -21,6 +21,10 @@ def car_shop(game: Game):
     car_dealer.build_car_dealer(game)
     scene.add_sprite(car_dealer.sprite)
 
+    white_screen = Sprite('assets/white-screen.png')
+    white_screen.set_opacity_to(0)
+    scene.add_sprite(white_screen)
+
     black_screen = Sprite('assets/black-screen.png')
     scene.add_sprite(black_screen)
 
@@ -119,7 +123,21 @@ def car_shop(game: Game):
 
     def on_choice_node_6_hit_click(_):
         scene.clear_text()
-        # TODO: hit the car dealer
+        jey.inventory.add_items(Car(), Knife())
+
+        game.wait_then(0, lambda _: jey.sprite.play_animation('walkforward'), reset_timer=True)
+        game.wait_then(0, lambda _: jey.sprite.change_y_by_in_seconds(- car_dealer.sprite.size[1] / 2, 3))
+        game.wait_then(3, lambda _: jey.sprite.stop_animation())
+        game.wait_then(0.5, lambda _: white_screen.set_opacity_to_in_seconds(1, 0.5))
+        game.wait_then(1, lambda _: white_screen.set_opacity_to_in_seconds(0, 0.5))
+        game.wait_then(0, lambda _: car_dealer.sprite.set_opacity_to(0))
+        game.wait_then(0.5, lambda _: jey.sprite.play_animation('walkingfromtheback'))
+        game.wait_then(0, lambda _: jey.sprite.change_y_by_in_seconds(car_dealer.sprite.size[1] / 4 + 100, 3))
+        game.wait_then(3, lambda _: jey.sprite.stop_animation())
+        game.wait_then(0, lambda _: jey.sprite.set_opacity_to(0))
+        game.wait_then(0.5, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
+        game.wait_then(2, lambda _: game.add_scene(nightclub(game), 'nightclub'))
+        game.wait_then(0, lambda _: game.change_scene('nightclub', True))
 
     def on_black_screen_end(_):
         if not jey.inventory.has('money_envelope'):
