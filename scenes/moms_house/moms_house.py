@@ -123,7 +123,7 @@ def moms_house(game: Game):
 
     def on_choice_node_2_friends_click(_):
         scene.clear_text()
-        game.wait_then(0, lambda _: jey_go_to_the_door())
+        jey_go_to_the_door()
         game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
         game.wait_then(2, lambda _: game.add_scene(nightclub(game), 'nightclub'))
         game.wait_then(0, lambda _: game.change_scene('nightclub', True))
