@@ -1,7 +1,6 @@
-from typing import Optional
+from typing import Optional, Callable
 
 from lib.game.Game import Game, Scene, Sprite
-from models.inventory.items.Car import Car
 from scenes.party.party import party
 from sprites.bip1.bip1 import bip1
 from sprites.bip2.bip2 import bip2
@@ -41,8 +40,6 @@ def nightclub(game: Game):
     jey.build_jey(game)
     scene.add_sprite(jey.sprite)
 
-    jey.inventory.add_items(Car())
-
     if jey.inventory.has('car'):
         yellow_car.build_yellow_car(game)
         scene.add_sprite(yellow_car.sprite)
@@ -74,7 +71,7 @@ def nightclub(game: Game):
         sprite_y = sprite_rows_coordinates[y_intersection]
         sprite_x = sprite_columns_coordinates[x_intersection]
         game.wait_then(0, lambda _: jey.sprite.go_to_in_seconds(sprite_x, sprite_y, 2))
-        game.wait_then(2, lambda _: jey.sprite.stop_animation())
+        game.wait_then(2, lambda _: stop_animations([jey.sprite]))
         game.wait_then(0, lambda _: take_flight_choice())
 
         def animate_sprites(sprites_to_animate: list[Sprite], current_position: list[int], target_position: list[int]):
@@ -92,6 +89,10 @@ def nightclub(game: Game):
             if animation_name != '':
                 for sprite in sprites_to_animate:
                     sprite.play_animation(animation_name)
+
+        def stop_animations(sprites_animated: list[Sprite]):
+            for sprite in sprites_animated:
+                sprite.stop_animation()
 
         def take_flight_choice():
             if not ((x_intersection == 0 and y_intersection == 2) or (x_intersection == 1 and y_intersection == 2)):
