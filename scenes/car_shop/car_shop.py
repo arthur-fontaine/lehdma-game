@@ -51,7 +51,8 @@ def car_shop(game: Game):
 
     def on_choice_node_3_yes_click(_):
         scene.clear_text()
-        # TODO: go to the mother's house
+        game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2), reset_timer=True)
+        game.wait_then(2, lambda _: game.change_scene('moms_house', 'moms_house_from_car_shop'))
 
     def on_choice_node_3_no_click(_):
         scene.clear_text()
