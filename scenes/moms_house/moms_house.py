@@ -117,7 +117,8 @@ def moms_house(game: Game):
     def on_choice_node_2_car_shop_click(_):
         scene.clear_text()
         jey_go_to_the_door()
-        game.wait_then(0, lambda _: game.add_scene(car_shop(game), 'car_shop'))
+        game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
+        game.wait_then(2, lambda _: game.add_scene(car_shop(game), 'car_shop'))
         game.wait_then(0, lambda _: game.change_scene('car_shop', True))
 
     def on_choice_node_2_friends_click(_):
