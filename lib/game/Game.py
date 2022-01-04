@@ -723,8 +723,9 @@ class Game(App, Element):
 
         self.scene.build()
 
-        if start_scene:
-            self.scene.emit('start')
+        for scene in self.scenes.values():
+            for sprite in scene.sprites:
+                sprite.stop_animation()
 
         if start_scene is True:
             self.scene.emit(scene_name + '_start')
