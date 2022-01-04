@@ -8,12 +8,11 @@ from kivy.core.window import Window
 from kivy.graphics.context_instructions import Color
 from kivy.graphics.vertex_instructions import RoundedRectangle, Line
 from kivy.modules import inspector
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.core.audio import SoundLoader
+from kivy.core.audio import SoundLoader, Sound
 from kivy.uix.label import Label
 # from kivy.core.text import FontContextManager as FCM
 #
@@ -663,7 +662,7 @@ class Game(App, Element):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.sound = None
+        self.sounds = []
         self.scenes: dict[str, Scene] = {}
         self.current_scene_name = None
         self.__timer = 0
@@ -687,6 +686,13 @@ class Game(App, Element):
             return self.scenes[self.current_scene_name]
         else:
             return self.scenes[list(self.scenes.keys())[0]]
+
+    @property
+    def current_sound(self) -> Optional[Sound]:
+        if len(self.sounds) > 0:
+            return self.sounds[-1]
+        else:
+            return None
 
     def on_start(self):
         # if self.events.get('start') is not None:
@@ -730,17 +736,26 @@ class Game(App, Element):
 
         self.scene.opacity = 1
 
-    def play_song(self, song_path: str):
+    def play_song(self, song_path: str, volume: float = 1.0, loop: bool = False):
         """
         :param song_path: The path to the song to play
+        :param volume: The volume of the song
+        :param loop: If the song should be looped
 
         @example
         ```python
         game.play_song('song.mp3') # Plays the song at song.mp3
         ```
         """
-        self.sound = SoundLoader.load(song_path)
-        self.sound.play()
+        if self.current_sound is not None:
+            self.current_sound.stop()
+
+        new_sound = SoundLoader.load(song_path)
+        new_sound.volume = volume
+        new_sound.loop = loop
+
+        self.sounds.append(new_sound)
+        self.current_sound.play()
 
     def stop_song(self):
         """
@@ -751,7 +766,11 @@ class Game(App, Element):
         game.stop_song() # Stops the current song
         ```
         """
-        self.sound.stop()
+        self.current_sound.stop()
+        self.sounds.pop()
+
+        if self.current_sound is not None:
+            self.current_sound.play()
 
     def seek_song_to(self, seconds: float):
         """
@@ -762,7 +781,7 @@ class Game(App, Element):
         game.seek_song(5) # Seeks to the given amount of seconds
         ```
         """
-        self.sound.seek(seconds)
+        self.current_sound.seek(seconds)
 
     def wait_for_seconds(self, seconds: float, use_timer=True, reset_timer=False):
         """
