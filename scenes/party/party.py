@@ -83,7 +83,7 @@ def party(game: Game):
 
     scene.on('party_black_screen_end', on_black_screen_end)
 
-    def leave():
+    def leave(change_scene=True):
         game.wait_then(0, lambda _: jey.sprite.play_animation('walkforward'), reset_timer=True)
         game.wait_then(0, lambda _: jey.sprite.change_y_by_in_seconds(-115, 2))
         game.wait_then(2, lambda _: jey.sprite.stop_animation())
@@ -94,6 +94,11 @@ def party(game: Game):
         game.wait_then(0, lambda _: jey.sprite.change_x_by_in_seconds(805, 14))
         game.wait_then(0, lambda _: bip1.sprite.change_x_by_in_seconds(805, 14))
         game.wait_then(0, lambda _: bip2.sprite.change_x_by_in_seconds(805, 14))
+
+        if change_scene:
+            game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
+            game.wait_then(2, lambda _: game.add_scene(shed(game), 'shed'))
+            game.wait_then(0, lambda _: game.change_scene('shed', True))
 
     def choice_node_12(on_stay_click: Callable, on_leave_click: Callable):
         displayed_text = """Voulez-vous rester ou partir ?
@@ -136,10 +141,6 @@ def party(game: Game):
         game.wait_then(dialog_duration, lambda _: scene.clear_text())
 
         game.wait_then(0, lambda _: leave())
-
-        game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2), reset_timer=True)
-        game.wait_then(2, lambda _: game.add_scene(shed(game), 'shed'))
-        game.wait_then(0, lambda _: game.change_scene('shed', True))
 
     def on_choice_node_12_leave_click(_):
         game.wait_then(0, lambda _: scene.clear_text(), reset_timer=True)
