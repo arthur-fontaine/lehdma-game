@@ -260,9 +260,32 @@ def nightclub(game: Game):
         game.wait_then(dialog_duration, lambda _: scene.display_text("Circulez s'il vous plait.", bouncer.name))
         game.wait_then(dialog_duration,
                        lambda _: scene.clear_text())
-        game.wait_then(0, lambda _: take_flight())
+        game.wait_then(0, lambda _: choice_node_9(on_choice_node_9_use_knife_click, on_choice_node_9_hit_click,
+                                                  on_choice_node_9_flight_click))
 
-    scene.on('black_screen_end', on_black_screen_end)
+    scene.on('nightclub_black_screen_end', on_black_screen_end)
+
+    def choice_node_9(on_use_knife_click: Callable, on_hit_click: Callable, on_flight_click: Callable):
+        displayed_text = """Que faire ?
+> [ref=use_knife]Utiliser la couteau[/ref]
+> [ref=hit]Frapper le vigile[/ref]
+> [ref=flight]Prendre la fuite[/ref]"""
+
+        scene.display_text(displayed_text,
+                           on_use_knife_click=on_use_knife_click,
+                           on_hit_click=on_hit_click,
+                           on_flight_click=on_flight_click)
+
+    def on_choice_node_9_use_knife_click(_):
+        # TODO: use knife -> police -> game over
+        pass
+
+    def on_choice_node_9_hit_click(_):
+        # TODO: hit -> police -> game over
+        pass
+
+    def on_choice_node_9_flight_click(_):
+        take_flight()
 
     def show_chapter_title(_):
         chapter_sprite.set_opacity_to_in_seconds(1, 2)
