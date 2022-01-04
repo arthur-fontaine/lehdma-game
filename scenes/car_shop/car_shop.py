@@ -117,7 +117,7 @@ def car_shop(game: Game):
 
         car_dealer.sprite.play_animation('walkingfromtheback')
         car_dealer.sprite.change_y_by_in_seconds(jey.sprite.pos[1] - car_dealer.sprite.pos[1] + 100, 5)
-        game.wait_then(5, lambda _: car_dealer.sprite.stop_animation(), reset_timer=True)
+        game.wait_then(5, lambda _: car_dealer.sprite.stop_animation())
 
         # TODO: gets picked up by the police
 
