@@ -277,9 +277,11 @@ def nightclub(game: Game):
 
     def choice_node_9(on_use_knife_click: Callable, on_hit_click: Callable, on_flight_click: Callable):
         displayed_text = """Que faire ?
-> [ref=use_knife]Utiliser la couteau[/ref]
-> [ref=hit]Frapper le vigile[/ref]
-> [ref=flight]Prendre la fuite[/ref]"""
+ > [ref=hit]Frapper le vigile[/ref]
+ > [ref=flight]Prendre la fuite[/ref]"""
+
+        if jey.inventory.has('knife'):
+            displayed_text += " > [ref=use_knife]Utiliser le couteau[/ref]"
 
         scene.display_text(displayed_text,
                            on_use_knife_click=on_use_knife_click,
