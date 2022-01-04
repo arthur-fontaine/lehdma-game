@@ -710,7 +710,7 @@ class Game(App, Element):
 
         self.scenes[scene_name] = scene
 
-    def change_scene(self, scene_name: str, start_scene: bool = False):
+    def change_scene(self, scene_name: str, start_scene: Union[bool, str] = False):
         """
         Changes the current scene
 
