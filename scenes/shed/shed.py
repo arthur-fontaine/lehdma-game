@@ -142,7 +142,8 @@ def shed(game: Game):
 
         game.wait_then(dialog_duration, lambda _: scene.clear_text())
         game.wait_then(0, lambda _: black_screen.set_opacity_to(1))
-        game.wait_then(2, lambda _: end_sprite.set_opacity_to_in_seconds(1, 2))
+        game.wait_then(2, lambda _: game.play_song('assets/songs/outro.mp3'))
+        game.wait_then(44, lambda _: end_sprite.set_opacity_to_in_seconds(1, 2))
 
     scene.on('shed_black_screen_end', on_black_screen_end)
 

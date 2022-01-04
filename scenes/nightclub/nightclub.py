@@ -139,7 +139,8 @@ def nightclub(game: Game):
             game.wait_then(2, lambda _: jey.sprite.stop_animation())
             game.wait_then(0, lambda _: jey.sprite.set_opacity_to(0))
             game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
-            game.wait_then(2, lambda _: game.add_scene(party(game), 'party'))
+            game.wait_then(2, lambda _: game.play_song('assets/songs/second-meet-mr-anderson.mp3'))
+            game.wait_then(73, lambda _: game.add_scene(party(game), 'party'))
             game.wait_then(0, lambda _: game.change_scene('party', True))
 
         def hide_in_the_car_shop():
@@ -258,8 +259,10 @@ def nightclub(game: Game):
         black_screen.set_scale_to(5)
         chapter_sprite.set_position_to(chapter_sprite.size[0] / 2, chapter_sprite.size[1] / 2)
 
-        game.wait_then(2, show_chapter_title, reset_timer=True)
-        game.wait_then(0, lambda _: scene.emit('black_screen_is_disappearing'))
+        game.play_song('assets/songs/first-meet-mr-anderson.mp3')
+        game.wait_then(37, lambda _: game.stop_song(), reset_timer=True)
+        game.wait_then(2, show_chapter_title)
+        game.wait_then(0, lambda _: scene.emit('nightclub_black_screen_is_disappearing'))
         game.wait_then(5, hide_chapter_title_and_black_screen)
         game.wait_then(2, lambda _: scene.emit('black_screen_end'))
 
