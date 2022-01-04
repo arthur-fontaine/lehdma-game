@@ -186,9 +186,18 @@ def nightclub(game: Game):
 
         map_sprite.set_position_to(map_sprite.size[0] / 2 - 1490, map_sprite.size[1] / 2)
 
-    scene.on('black_screen_is_disappearing', on_black_screen_is_disappearing)
+        if not jey.inventory.has('car'):
+            map_sprite.set_position_to(-297, 654)
+            jey.sprite.set_position_to(400, 433)
+            bip2.sprite.set_position_to(525, 353)
+            bip1.sprite.set_position_to(525, 433)
+            bouncer.sprite.set_position_to(287, 433)
+
+    scene.on('nightclub_black_screen_is_disappearing', on_black_screen_is_disappearing)
 
     def on_black_screen_end(_):
+        dialog_duration = 5
+
         if jey.inventory.has('car'):
             game.wait_then(0, lambda _: bip1.sprite.play_animation('walkforward'), reset_timer=True)
             game.wait_then(0, lambda _: bip1.sprite.change_y_by_in_seconds(-20, 1))
@@ -240,9 +249,9 @@ def nightclub(game: Game):
             game.wait_then(0, lambda _: yellow_car.sprite.set_opacity_to(0))
             game.wait_then(0, lambda _: jey.sprite.set_opacity_to(1))
         else:
-            scene.display_text("T'abuses frère, t'as pas de voiture.")
-
-        dialog_duration = 5
+            game.wait_then(0, lambda _: scene.display_text("T'abuses frère, t'aurais pu venir nous chercher en "
+                                                           "voiture."), reset_timer=True)
+            game.wait_then(dialog_duration, lambda _: scene.clear_text())
 
         game.wait_then(1, lambda _: scene.display_text("Ça va pas être possible pour vous ce soir les mecs. Veuillez "
                                                        "disposer.", bouncer.name))
@@ -272,8 +281,8 @@ def nightclub(game: Game):
         game.wait_then(2, show_chapter_title)
         game.wait_then(0, lambda _: scene.emit('nightclub_black_screen_is_disappearing'))
         game.wait_then(5, hide_chapter_title_and_black_screen)
-        game.wait_then(2, lambda _: scene.emit('black_screen_end'))
+        game.wait_then(2, lambda _: scene.emit('nightclub_black_screen_end'))
 
-    scene.on('start', on_scene_start)
+    scene.on('nightclub_start', on_scene_start)
 
     return scene
