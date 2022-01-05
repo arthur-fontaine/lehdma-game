@@ -125,8 +125,9 @@ def shed(game: Game):
         game.wait_then(0, lambda _: white_screen.set_opacity_to_in_seconds(1, 0.5))
         game.wait_then(0.5, lambda _: bip1.sprite.set_opacity_to(0))
         game.wait_then(1, lambda _: white_screen.set_opacity_to_in_seconds(0, 0.5))
+        game.wait_then(1, lambda _: game.stop_song())
 
-        game.wait_then(2, lambda _: bip2.sprite.switch_costume('back'))
+        game.wait_then(1, lambda _: bip2.sprite.switch_costume('back'))
 
         game.wait_then(0, lambda _: scene.display_text('Putain ! J\'arrête ! J\'arrête tout !', bip2.name))
         game.wait_then(dialog_duration, lambda _: scene.display_text('Non non non, t\'arrêtes rien du tout ! Tu vas '
