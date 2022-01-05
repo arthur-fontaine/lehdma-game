@@ -137,8 +137,8 @@ def nightclub(game: Game):
 
                 scene.display_text(displayed_text,
                                    on_store_click=lambda _: hide_in_the_store(),
-                                   on_car_shop_click=lambda _: hide_in_the_car_shop(),
-                                   on_trash_click=lambda _: hide_in_the_trash())
+                                   on_car_shop_click=lambda _: bad_hiding_place('chez le concessionaire'),
+                                   on_trash_click=lambda _: bad_hiding_place('dans la poubelle'))
 
         def hide_in_the_store():
             game.wait_then(0, lambda _: scene.clear_text(), reset_timer=True)
@@ -161,11 +161,19 @@ def nightclub(game: Game):
             game.wait_then(73, lambda _: game.add_scene(party(game), 'party'))
             game.wait_then(0, lambda _: game.change_scene('party', True))
 
-        def hide_in_the_car_shop():
-            pass
+        def bad_hiding_place(hiding_place: str):
+            displayed_text = f"Vous essayez de vous cacher {hiding_place}, mais la police vous attrape avant."
 
-        def hide_in_the_trash():
-            pass
+            game.wait_then(0, lambda _: scene.clear_text(), reset_timer=True)
+            game.wait_then(0, lambda _: scene.display_text(displayed_text))
+
+            game.wait_then(5, lambda _: scene.clear_text())
+            game.wait_then(0, lambda _: show_police_sirens(game, blue_police_siren, red_police_siren, 10, 2))
+
+            game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
+
+            game.wait_then(2, lambda _: game.add_scene(game_over(game), 'game_over'))
+            game.wait_then(0, lambda _: game.change_scene('game_over', True))
 
     def on_black_screen_is_disappearing(_):
         jey.sprite.set_scale_to(0.25)
