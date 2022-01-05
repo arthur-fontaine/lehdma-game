@@ -31,3 +31,17 @@ python3 main.py
 ## Documentation
 
 The documentation is available at [DOCUMENTATION.md](/DOCUMENTATION.md).
+
+## Known issues
+
+### Kivy installation on Apple Silicon
+
+On Apple Silicon, Kivy should be rebuilt locally.
+
+```shell
+git clone https://github.com/kivy/kivy.git
+cd kivy
+make
+```
+
+Then copy the `kivy` folder to the `/usr/local/lib/python3.x/site-packages` folder.
