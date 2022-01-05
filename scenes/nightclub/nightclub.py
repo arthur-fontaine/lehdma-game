@@ -298,8 +298,12 @@ def nightclub(game: Game):
                            on_flight_click=on_flight_click)
 
     def on_choice_node_9_use_knife_click(_):
-        # TODO: use knife
-        show_police_sirens(game, blue_police_siren, red_police_siren, 10, 2)
+        game.wait_then(0, lambda _: scene.clear_text(), reset_timer=True)
+        game.wait_then(0, lambda _: scene.display_text("Vous essayez d'utiliser le couteau, mais le vigile esquive "
+                                                       "votre coup. La police vous arrête."))
+
+        game.wait_then(5, lambda _: scene.clear_text())
+        game.wait_then(0, show_police_sirens(game, blue_police_siren, red_police_siren, 10, 2))
 
         game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
 
@@ -307,8 +311,12 @@ def nightclub(game: Game):
         game.wait_then(0, lambda _: game.change_scene('game_over'))
 
     def on_choice_node_9_hit_click(_):
-        # TODO: hit
-        show_police_sirens(game, blue_police_siren, red_police_siren, 10, 2)
+        game.wait_then(0, lambda _: scene.clear_text(), reset_timer=True)
+        game.wait_then(0, lambda _: scene.display_text("Vous frappez le vigile, mais il vous évite votre "
+                                                       "attaque. La police vous arrête."))
+
+        game.wait_then(5, lambda _: scene.clear_text())
+        game.wait_then(0, show_police_sirens(game, blue_police_siren, red_police_siren, 10, 2))
 
         game.wait_then(0, lambda _: black_screen.set_opacity_to_in_seconds(1, 2))
 
