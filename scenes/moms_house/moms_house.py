@@ -63,7 +63,7 @@ def moms_house(game: Game):
         de rendre fiers nos parents\"""", mom.name))
         game.wait_then(dialog_duration,
                        lambda _: scene.display_text("""\"Ouais, tu dis tout l'temps la même, ouais...\"""", jey.name))
-        game.wait_then(dialog_duration, lambda _: scene.display_text("""\" Ouais, bon, alors tu vas pas m'dire que c'est un p'tit vent de rien du tout qui
+        game.wait_then(dialog_duration, lambda _: scene.display_text("""\"Ouais, bon, alors tu vas pas m'dire que c'est un p'tit vent de rien du tout qui
         va t'clouer au lit, hein. Roh, allez, bouge-toi, là !\"""", mom.name))
         game.wait_then(dialog_duration, lambda _: scene.clear_text())
         game.wait_then(0, lambda _: choice_node_1(on_choice_node_1_move_click, on_choice_node_1_dont_move_click))
