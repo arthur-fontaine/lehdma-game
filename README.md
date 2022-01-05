@@ -14,6 +14,20 @@ Build by:
 
 L'Étrange Histoire de Mr. Anderson is an album by the French rapper [Laylow](https://fr.wikipedia.org/wiki/Laylow). For a school project where we had to create a game, we decided to create a game based on the album.
 
+## Instructions
+
+_The game is developed using Python 3.9. We cannot guarantee that it will work with other versions of Python._
+
+To install the dependencies, run the following command:
+```shell
+pip install -r requirements.txt
+```
+
+Then, to run the game, run the following command:
+```shell
+python3 main.py
+```
+
 ## Documentation
 
 The documentation is available at [DOCUMENTATION.md](/DOCUMENTATION.md).
